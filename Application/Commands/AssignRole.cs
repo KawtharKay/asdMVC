@@ -17,7 +17,7 @@ namespace Application.Commands
                 if (user is null) throw new Exception("User does not exist");
 
                 var role = await roleRepository.GetAsync(request.RoleId);
-                if (role is null) throw new Exception("User does not exist");
+                if (role is null) throw new Exception("Role does not exist");
 
                 var userRole = new UserRole
                 {

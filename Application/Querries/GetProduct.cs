@@ -1,10 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Application.Common;
+using Application.Repositories;
+using Mapster;
+using MediatR;
 
-namespace Application.Querries
+namespace Application.Queries
 {
-    internal class GetProduct
+    public class GetProduct
     {
+        public record GetProductQuery(Guid Id) : IRequest<Result<GetProductResponse>>;
+
+        public class GetProductHandler(IProductRepository productRepository) : IRequestHandler<GetProductQuery, Result<GetProductResponse>>
+        {
+            public async Task<Result<GetProductResponse>> Handle(GetProductQuery request, CancellationToken cancellationToken)
+            {
+                var product = await productRepository.GetProductAsync(request.Id);
+                if (product is null) throw new Exception("Product not found");
+
+                return Result<GetProductResponse>.Success("Success!", product.Adapt<GetProductResponse>());
+            }
+        }
+
+        public record GetProductResponse(Guid Id, string Name, string Sku, string ImageUrl, decimal Price, Guid CategoryId);
     }
 }
