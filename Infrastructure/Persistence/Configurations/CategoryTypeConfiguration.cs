@@ -14,9 +14,8 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(x => x.Name)
                 .IsRequired().HasMaxLength(50);
 
-             builder.HasMany(x => x.Products)
-                .WithOne(z => z.Category).HasForeignKey(x => x.CategoryId);
-
+            builder.HasMany(x => x.Products)
+               .WithOne(z => z.Category).HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
