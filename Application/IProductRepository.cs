@@ -7,8 +7,9 @@ namespace Application
 {
     public interface IProductRepository
     {
+        Task<bool> IsExistAsync(string sku);
         Task AddToDbAsync(Product product);
-        Task<Product>? GetProductAsync(Guid id);
+        Task<Product?> GetProductAsync(Guid id);
         Task<ICollection<Product>> GetProductsAsync();
     }
 }

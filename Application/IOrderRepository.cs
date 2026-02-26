@@ -7,8 +7,9 @@ namespace Application
 {
     public interface IOrderRepository
     {
+        Task<bool> IsExistAsync(string orderNo);
         Task AddToDbAsync(Order order);
-        Task<Order>? GetOrderAsync(Guid id);
+        Task<Order?> GetOrderAsync(Guid id);
         Task<ICollection<Order>> GetOrdersAsync();
     }
 }
