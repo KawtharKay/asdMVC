@@ -9,6 +9,7 @@
         public string Address { get; set; } = default!;
         public string PhoneNo { get; set; } = default!;
         public Cart Cart { get; set; } = default!;
+        public Wallet? Wallet { get; set; }
         public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
     }
 }

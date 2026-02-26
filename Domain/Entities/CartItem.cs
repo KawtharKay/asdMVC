@@ -1,8 +1,7 @@
 ﻿namespace Domain.Entities
 {
-    public class CartItem
+    public class CartItem : BaseEntity
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
         public Guid ProductId { get; set; }
         public Product Product { get; set; } = default!;
         public  Guid CartId { get; set; }

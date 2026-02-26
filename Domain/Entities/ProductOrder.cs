@@ -1,8 +1,7 @@
 ﻿namespace Domain.Entities
 {
-    public class ProductOrder
+    public class ProductOrder : BaseEntity
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
         public Guid ProductId { get; set; }
         public Product Product { get; set; } = default!;
         public Guid OrderId { get; set; }
