@@ -10,9 +10,6 @@ namespace Domain.Entities
         public decimal TotalAmount { get; set; }
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
         public string DeliveryAddress { get; set; } = default!;
-        public DateTime? ShippedDate { get; set; }
-        public DateTime? DeliveredDate { get; set; }
-        public string? Notes { get; set; }
         public ICollection<ProductOrder> ProductOrders { get; set; } = new HashSet<ProductOrder>();
     }
 }

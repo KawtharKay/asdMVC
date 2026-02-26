@@ -1,9 +1,9 @@
-﻿using Application;
+﻿using Application.Repositories;
 using Domain.Entities;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure
+namespace Infrastructure.Repositories
 {
     public class OrderRepository : IOrderRepository
     {

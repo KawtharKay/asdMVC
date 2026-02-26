@@ -1,6 +1,4 @@
-﻿
-
-using Application;
+﻿using Application.Repositories;
 using Domain.Entities;
 
 namespace Infrastructure.Repositories
