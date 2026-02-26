@@ -1,5 +1,5 @@
 ﻿
-using Application.Pagenation;
+using Application.Common.Pagenation;
 using Application.Repositories;
 using Domain.Entities;
 using Domain.Enums;
