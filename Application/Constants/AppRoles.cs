@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Constants
+﻿namespace Application.Constants
 {
-    public class AppRoles
+    public static class AppRoles
     {
+        public const string Admin = "app_admin";
+        public const string Customer = "app_customer";
     }
 }
