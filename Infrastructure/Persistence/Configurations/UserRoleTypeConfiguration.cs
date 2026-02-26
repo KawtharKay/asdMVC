@@ -11,7 +11,7 @@ namespace Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<UserRole> builder)
         {
-            builder.HasKey(a => a.Id);
+            builder.HasKey(a => new {a.UserId, a.RoleId});
 
             builder.HasOne(a => a.User)
                 .WithMany(a => a.UserRoles)

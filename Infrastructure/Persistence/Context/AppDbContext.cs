@@ -10,6 +10,7 @@ namespace Infrastructure.Persistence.Context
 
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Tranzaction> Tranzactions { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Customer> Customers { get; set; }
