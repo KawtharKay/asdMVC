@@ -19,6 +19,7 @@ namespace Infrastructure.Repositories
 
         public async Task AddTransactionsAsync(Tranzaction transaction)
         {
+
              await _context.Tranzactions.AddAsync(transaction);
         }
 
