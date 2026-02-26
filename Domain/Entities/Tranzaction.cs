@@ -2,7 +2,7 @@
 
 namespace Domain.Entities
 {
-    public class Transaction : BaseEntity
+    public class Tranzaction : BaseEntity
     {
         public Guid WalletId { get; set; }
         public Wallet Wallet { get; set; } = null!;

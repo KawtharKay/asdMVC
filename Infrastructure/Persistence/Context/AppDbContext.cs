@@ -18,6 +18,8 @@ namespace Infrastructure.Persistence.Context
         public DbSet<Category> Categories { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Tranzaction> Tranzactions { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
     }
 
 }
