@@ -17,9 +17,17 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.OrderNo)
                 .IsRequired();
-            builder.HasOne(x => x.ProductOrders)
+            builder.Property(x => x.DeliveryAddress) 
+                .IsRequired();
+            builder.Property(x => x.TotalAmount)
+                .IsRequired();
+
+            builder.HasOne(x => x.Customer)
                 .WithMany()
-                .HasForeignKey(x => x.CustomerId);
+                .HasForeignKey(x => x.CustomerId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.ProductOrders)
+                .WithMany();
         }
     }
 }
