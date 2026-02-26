@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Domain.Entities;
 
 namespace Application
 {
-    internal interface IUserRepository
+    public interface IUserRepository
     {
+        Task AddAsync(User user);
+        Task<bool> IsExist(Guid id);
     }
 }

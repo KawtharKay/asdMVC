@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Domain.Entities;
 
 namespace Application
 {
-    internal interface IRoleRepository
+    public interface IRoleRepository
     {
+        Task<bool> IsExist(string name);
+        Task AddAsync(Role role);
+        Task<ICollection<Role>> GetAllAsync();
     }
 }
