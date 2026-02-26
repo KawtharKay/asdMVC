@@ -10,11 +10,13 @@ namespace Infrastructure.Persistence.Configurations
         {
             builder.HasKey(x => x.Id);
 
+            builder.Ignore(x => x.TotalPrice);
+
             builder.HasOne(x => x.Customer)
-                .WithOne(z => z.Cart).HasForeignKey<Cart>(x => x.CustomerId);
+                .WithOne(z => z.Cart).HasForeignKey<Cart>(x => x.CustomerId).OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(x => x.CartItems)
-                .WithOne(z => z.Cart).HasForeignKey(x => x.CartId);
+                .WithOne(z => z.Cart).HasForeignKey(x => x.CartId).OnDelete(DeleteBehavior.Restrict);
 
                 builder.Property(x => x.TotalPrice).IsRequired();
         }

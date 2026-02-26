@@ -1,28 +1,35 @@
 ﻿using Application.Repositories;
 using Domain.Entities;
+using Infrastructure.Persistence.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
     public class CartRepository : ICartRepository
     {
-        public Task AddCartAsync(Cart cart)
+        private readonly AppDbContext _context;
+        public CartRepository(AppDbContext context)
         {
-
+            _context = context;
+        }
+        public async Task AddCartAsync(Cart cart)
+        {
+            await _context.Set<Cart>().AddAsync(cart);
         }
 
-        public Task<Cart?> GetCartByIdAsync(Guid id)
+        public async Task<Cart?> GetCartByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.Set<Cart>().FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<Cart?> GetCartByUserIdAsync(Guid userId)
+        public async Task<Cart?> GetCartByUserIdAsync(Guid userId)
         {
-            throw new NotImplementedException();
+            return await _context.Set<Cart>().Include(x => x.Customer).Where(x => x.CustomerId == userId).SingleOrDefaultAsync(x => x.Id == userId);
         }
 
         public void Update(Cart cart)
         {
-            throw new NotImplementedException();
+            _context.Set<Cart>().Update(cart);
         }
     }
 }

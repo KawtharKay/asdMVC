@@ -8,7 +8,7 @@ namespace Application.Repositories
         Task AddCategoryAsync(Category category);
         Task<Category?> GetCategoryByIdAsync(Guid id);
         Task<Category?> GetCategoryAsync(string name);
-        Task<PagenatedList<IEnumerable<Category>>> GetAllCategoriesAsync();
+        Task<IEnumerable<Category>> GetAllCategoriesAsync();
         void Update(Category category);
     }
 }
