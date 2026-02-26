@@ -1,9 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Persistence.Configurations
 {
@@ -12,6 +9,14 @@ namespace Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Cart> builder)
         {
             builder.HasKey(x => x.Id);
+
+            builder.HasOne(x => x.Customer)
+                .WithOne(z => z.Cart).HasForeignKey<Cart>(x => x.CustomerId);
+
+            builder.HasMany(x => x.CartItems)
+                .WithOne(z => z.Cart).HasForeignKey(x => x.CartId);
+
+                builder.Property(x => x.TotalPrice).IsRequired();
         }
     }
 }
