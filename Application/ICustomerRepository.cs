@@ -7,8 +7,9 @@ namespace Application
 {
     public interface ICustomerRepository
     {
+        Task<bool> IsExistAsync(string email);
         Task AddToDbAsync(Customer customer);
-        Task<Customer>? GetCustomerAsync(Guid id);
-        Task<ICollection<Customer> GetCustomersAsync();
+        Task<Customer?> GetCustomerAsync(Guid id);
+        Task<ICollection<Customer>> GetCustomersAsync();
     }
 }
