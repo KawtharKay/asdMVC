@@ -16,5 +16,15 @@ namespace Infrastructure.Repositories
         {
             return await context.Users.AnyAsync(u => u.Id == id);
         }
+
+        public async Task<User?> GetAsync(string email)
+        {
+            return await context.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).SingleOrDefaultAsync(user => user.Email == email);
+        }
+
+        public async Task<User?> GetAsync(Guid id)
+        {
+            return await context.Users.Include(x => x.UserRoles).ThenInclude(a => a.Role).SingleOrDefaultAsync(user => user.Id == id);
+        }
     }
 }
