@@ -16,13 +16,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(x => x.Email)
                 .IsRequired().HasMaxLength(60);
 
-            builder.HasOne(a => a.Customer)
-                .WithOne(a => a.User)
-                .HasForeignKey<Customer>(a => a.UserId).OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany(a => a.UserRoles)
-                .WithOne(a => a.User)
-                .HasForeignKey(a => a.UserId).OnDelete(DeleteBehavior.Cascade);
+            
         }
     }
 }
