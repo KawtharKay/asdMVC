@@ -1,6 +1,6 @@
-﻿using Application;
+﻿using Application.Repositories;
 
-namespace Infrastructure
+namespace Infrastructure.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {

@@ -1,9 +1,7 @@
-﻿
-
-using Application.Pagenation;
+﻿using Application.Pagenation;
 using Domain.Entities;
 
-namespace Application
+namespace Application.Repositories
 {
     public interface ICategoryRepository
     {

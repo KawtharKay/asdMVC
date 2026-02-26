@@ -2,7 +2,7 @@
 
 namespace Domain.Entities
 {
-    public class WalletTransaction : BaseEntity
+    public class Transaction : BaseEntity
     {
         public Guid WalletId { get; set; }
         public Wallet Wallet { get; set; } = null!;
@@ -10,10 +10,7 @@ namespace Domain.Entities
         public TransactionType Type { get; set; }
         public TransactionStatus Status { get; set; } = TransactionStatus.Pending;
         public string? PaystackReference { get; set; }
-        public string Description { get; set; } = string.Empty;
-        public decimal BalanceBefore { get; set; }
-        public decimal BalanceAfter { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public string Description { get; set; } = default!;
     }
 
 }
