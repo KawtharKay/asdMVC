@@ -1,9 +1,10 @@
 ﻿namespace Domain.Enums
 {
-    public enum TransactionType 
-    { 
-        Credit = 1, 
-        Debit 
+    public enum TransactionType
+    {
+        Credit = 1,      
+        Debit,      
+        Withdrawal 
     }
-    
+
 }

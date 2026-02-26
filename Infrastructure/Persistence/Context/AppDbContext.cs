@@ -8,6 +8,7 @@ namespace Infrastructure.Persistence.Context
         public AppDbContext(DbContextOptions options) : base(options)
         { }
 
+        public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Tranzaction> Tranzactions { get; set; }
@@ -21,7 +22,7 @@ namespace Infrastructure.Persistence.Context
         public DbSet<ProductOrder> ProductOrders { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Tranzaction> Transactions { get; set; }
         public DbSet<UserConversation> UserConversations { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<Wallet> Wallets { get; set; }
