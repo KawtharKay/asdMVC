@@ -1,5 +1,4 @@
-﻿
-namespace Application.Pagenation
+﻿namespace Application.Common.Pagenation
 {
     public class PagenatedList<T>
     {
