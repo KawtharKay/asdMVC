@@ -2,7 +2,7 @@
 {
     public enum NotificationType
     {
-        Order,
+        Order = 1,
         Wallet,
         Others
     }
