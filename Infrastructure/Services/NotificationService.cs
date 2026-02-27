@@ -4,6 +4,7 @@ using Domain.Enums;
 using Infrastructure.Hubs;
 using Infrastructure.Persistence.Context;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services
 {
@@ -34,7 +35,7 @@ namespace Infrastructure.Services
                 Title = title,
                 Message = message,
                 Type = type,
-                ActionUrl = actionUrl,
+                //ActionUrl = actionUrl,
                 IsRead = false,
                 CreatedBy = "System"
             };
@@ -51,7 +52,7 @@ namespace Infrastructure.Services
                     title = notification.Title,
                     message = notification.Message,
                     type = notification.Type.ToString(),
-                    actionUrl = notification.ActionUrl,
+                    //actionUrl = notification.ActionUrl,
                     createdAt = notification.DateCreated
                 });
         }
@@ -64,7 +65,6 @@ namespace Infrastructure.Services
             if (notification == null) return;
 
             notification.IsRead = true;
-            notification.ReadAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
 
@@ -77,7 +77,6 @@ namespace Infrastructure.Services
             foreach (var notification in notifications)
             {
                 notification.IsRead = true;
-                notification.ReadAt = DateTime.UtcNow;
             }
 
             await _context.SaveChangesAsync();
