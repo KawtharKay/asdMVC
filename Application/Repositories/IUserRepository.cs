@@ -6,5 +6,7 @@ namespace Application.Repositories
     {
         Task AddAsync(User user);
         Task<bool> IsExist(Guid id);
+        Task<User?> GetAsync(string email);
+        Task<User?> GetAsync(Guid id);
     }
 }
