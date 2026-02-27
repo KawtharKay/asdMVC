@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Infrastructure
+namespace Infrastructure.Services
 {
     public class PaystackService : IPaystackService
     {

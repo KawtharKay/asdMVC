@@ -8,6 +8,12 @@
         public string ImageUrl { get; set; } = default!;
         public Guid CategoryId { get; set; }
         public Category Category { get; set; } = default!;
+        public int StockQuantity { get; set; } 
+        public int LowStockThreshold { get; set; }
+        public bool IsInStock => StockQuantity > 0;
+        public bool IsLowStock => StockQuantity <= LowStockThreshold;
+        public string? QrCodeBase64 { get; set; }
+        public string? QrCodeImagePath { get; set; }
         public ICollection<CartItem> CartItems { get; set; } = new HashSet<CartItem>();
         public ICollection<ProductOrder> ProductOrders { get; set; } = new HashSet<ProductOrder>();
     }

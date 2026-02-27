@@ -1,9 +1,33 @@
+using Application.Services;
+using Infrastructure.Hubs;
+using Infrastructure.Services;
+using Infrastructure.Settings;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+builder.Services.Configure<GeminiSettings>(
+    builder.Configuration.GetSection("GeminiSettings"));
+
+builder.Services.Configure<FileSettings>(
+    builder.Configuration.GetSection("FileSettings"));
+
+// SignalR
+builder.Services.AddSignalR();
+
+// Services
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddHttpClient<IGeminiService, GeminiService>();
 
 var app = builder.Build();
+
+app.MapHub<NotificationHub>("/notificationHub");
+app.MapHub<ChatHub>("/chatHub");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

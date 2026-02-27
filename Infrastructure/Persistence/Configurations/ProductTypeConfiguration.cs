@@ -19,6 +19,9 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(x => x.Sku)
                 .IsRequired();
 
+            builder.Property(p => p.QrCodeImagePath)
+                .HasMaxLength(500);
+
             builder.HasMany(x => x.ProductOrders)
                 .WithOne(x => x.Product).HasForeignKey(x => x.Id);
             builder.HasMany(x => x.CartItems)
