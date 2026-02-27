@@ -17,13 +17,13 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task AddTransactionsAsync(Tranzaction transaction)
+        public async Task AddTransactionsAsync(WalletTransaction transaction)
         {
 
              await _context.Tranzactions.AddAsync(transaction);
         }
 
-        public async Task<Tranzaction?> GetTransactionsAsync(Guid transactionId)
+        public async Task<WalletTransaction?> GetTransactionsAsync(Guid transactionId)
         {
             return await _context.Tranzactions.Include(t => t.Wallet)
                                               .FirstOrDefaultAsync(t => t.Id == transactionId);
@@ -31,14 +31,14 @@ namespace Infrastructure.Repositories
 
         
 
-        public async Task<PagenatedList<Tranzaction>> GetTransactionsByWalletIdAsync(PageRequest request, Guid walletId)
+        public async Task<PagenatedList<WalletTransaction>> GetTransactionsByWalletIdAsync(PageRequest request, Guid walletId)
         {
             var query = _context.Tranzactions.AsQueryable();
             var totalCount = await query.CountAsync();
 
             {
                 var ttt = query.Skip((request.Page - 1) * request.PageSize).Take(request.PageSize);
-                return new PagenatedList<Tranzaction>
+                return new PagenatedList<WalletTransaction>
                 {
                     Items = await ttt.ToListAsync(),
                     TotalCount = totalCount,

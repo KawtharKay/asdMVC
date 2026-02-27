@@ -5,6 +5,6 @@
         public Guid CustomerId { get; set; }
         public Customer Customer { get; set; } = default!;
         public decimal Balance { get; set; }
-        public ICollection<Tranzaction> Transactions { get; set; } = new HashSet<Tranzaction>();
+        public ICollection<WalletTransaction> Transactions { get; set; } = new HashSet<WalletTransaction>();
     }
 }
