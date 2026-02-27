@@ -48,6 +48,6 @@ namespace Application.Querries
             }
         }
 
-        public record GetAllTransactionWithWalletIdResponse(decimal Amount, TransactionType Type, Domain.Enums.TranzactionStatus Status);
+        public record GetAllTransactionWithWalletIdResponse(decimal Amount, TransactionType Type, Domain.Enums.TransactionStatus Status);
     }
 }

@@ -11,18 +11,23 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasKey(b => b.Id);
 
             builder.Property(b => b.BankName)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(100);
 
             builder.Property(b => b.BankCode)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(20);
 
             builder.Property(b => b.AccountNumber)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(20);
 
             builder.Property(b => b.AccountName)
-                .IsRequired();
+                .IsRequired()
+                .HasMaxLength(150);
 
-            builder.Property(b => b.RecipientCode);
+            builder.Property(b => b.RecipientCode)
+                .HasMaxLength(100);
 
             builder.HasOne(b => b.Customer)
                 .WithMany(c => c.BankAccounts)

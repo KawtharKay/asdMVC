@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Configurations
 {
-    public class UserConversationType : IEntityTypeConfiguration<UserConversation>
+    public class UserConversationConfiguration : IEntityTypeConfiguration<UserConversation>
     {
         public void Configure(EntityTypeBuilder<UserConversation> builder)
         {
@@ -12,14 +12,13 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasOne(uc => uc.User)
                 .WithMany(u => u.UserConversations)
-                .HasForeignKey(uc => uc.UserId);
-
-            builder.HasOne(uc => uc.Conversation)
-                .WithMany(c => c.UserConversations);
+                .HasForeignKey(uc => uc.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(uc => uc.Conversation)
                 .WithMany(c => c.UserConversations)
-                .HasForeignKey(uc => uc.ConversationId);
+                .HasForeignKey(uc => uc.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

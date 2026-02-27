@@ -47,7 +47,7 @@ namespace Application.Commands
                 var getWallet = await _walletRepository.GetByCustomerIdAsync(getCustomer.Id);
 
 
-                var transaction = new Tranzaction
+                var transaction = new WalletTransaction
                 {
                     Amount = request.Amount,
                     Description = request.Description,
@@ -64,6 +64,6 @@ namespace Application.Commands
                 return new InitiateTransactionResponse(transaction.Id, transaction.Status);
             }
         }
-        public record InitiateTransactionResponse(Guid TransactionId, TranzactionStatus Transaction);
+        public record InitiateTransactionResponse(Guid TransactionId, Domain.Enums.TransactionStatus Transaction);
     }
 }
