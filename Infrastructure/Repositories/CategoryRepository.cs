@@ -1,11 +1,7 @@
-﻿using Application.Pagenation;
-using Application.Repositories;
+﻿using Application.Repositories;
 using Domain.Entities;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Repositories
 {

@@ -17,8 +17,8 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.Name).IsRequired();
 
-            builder.HasMany(x => x.UserRoles)
-                .WithOne(x => x.Role).HasForeignKey(x => x.Id);
+            //builder.HasMany(x => x.UserRoles)
+            //    .WithOne(x => x.Role).HasForeignKey(x => x.Id);
         }
     }
 }
