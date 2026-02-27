@@ -23,6 +23,7 @@ namespace Application.Commands
             }
 
             public async Task<LoginUserResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+
             {
                 var user = await _userRepository.GetAsync(request.Email);
                 if (user is null)
