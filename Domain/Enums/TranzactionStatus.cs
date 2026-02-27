@@ -1,6 +1,6 @@
 ﻿namespace Domain.Enums
 {
-    public enum TransactionStatus 
+    public enum TranzactionStatus 
     { 
         Pending = 1, 
         Success, 

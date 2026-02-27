@@ -7,6 +7,7 @@ namespace Application.Repositories
         Task AddCartAsync(Cart cart);
         Task<Cart?> GetCartByIdAsync(Guid id);
         Task<Cart?> GetCartByUserIdAsync(Guid userId);
+        Task<IEnumerable<Cart>> GetAllCartsAsync();
         void Update(Cart cart);
 
     }

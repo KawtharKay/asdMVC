@@ -12,7 +12,7 @@ namespace Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task AddToDbAsync(Customer customer)
+        public async Task AddAsync(Customer customer)
         {
             await _context.Set<Customer>().AddAsync(customer);
         }
@@ -20,6 +20,11 @@ namespace Infrastructure.Repositories
         public async Task<Customer?> GetCustomerAsync(Guid id)
         {
             return await _context.Set<Customer>().FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<Customer?> GetCustomerAsync(string email)
+        {
+            return await _context.Customers.FirstOrDefaultAsync(x => x.Email == email);
         }
 
         public async Task<ICollection<Customer>> GetCustomersAsync()
