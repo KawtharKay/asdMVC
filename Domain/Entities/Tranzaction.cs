@@ -8,7 +8,7 @@ namespace Domain.Entities
         public Wallet Wallet { get; set; } = null!;
         public decimal Amount { get; set; }
         public TransactionType Type { get; set; }
-        public TransactionStatus Status { get; set; } = TransactionStatus.Pending;
+        public TranzactionStatus Status { get; set; } = TranzactionStatus.Pending;
         public string? PaystackReference { get; set; }
         public string Description { get; set; } = default!;
     }

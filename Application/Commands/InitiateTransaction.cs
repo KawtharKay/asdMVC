@@ -9,9 +9,9 @@ namespace Application.Commands
 {
     public class MakeTransaction
     {
-        public record MakeTransactionCommand(decimal Amount, string PayStackREference, string Description, TransactionType Type) : IRequest<MakeTransactionResponse>;
+        public record InitiateTransactionCommand(decimal Amount, string PayStackREference, string Description, TransactionType Type) : IRequest<InitiateTransactionResponse>;
 
-        public class MakeTransactionHandler : IRequestHandler<MakeTransactionCommand, MakeTransactionResponse>
+        public class InitiateTransactionHandler : IRequestHandler<InitiateTransactionCommand, InitiateTransactionResponse>
         {
             private readonly ITransactionRepository _transactionRepository;
             private readonly ICurrentUser _currentUser;
@@ -20,7 +20,7 @@ namespace Application.Commands
             private readonly ICustomerRepository _customerRepository;
             private readonly IUnitOfWork _unitOfWork;
 
-            public MakeTransactionHandler(ITransactionRepository transactionRepository,
+            public InitiateTransactionHandler(ITransactionRepository transactionRepository,
                 ICurrentUser currentUser, IWalletRepository walletRepository,
                 IUserRepository userRepository, ICustomerRepository customerRepository, IUnitOfWork unitOfWork)
             {
@@ -31,7 +31,7 @@ namespace Application.Commands
                 _walletRepository = walletRepository;
                 _unitOfWork = unitOfWork;
             }
-            public async Task<MakeTransactionResponse> Handle(MakeTransactionCommand request, CancellationToken cancellationToken)
+            public async Task<InitiateTransactionResponse> Handle(InitiateTransactionCommand request, CancellationToken cancellationToken)
             {
                 var userId = _currentUser.GetCurrentUser();
                 var getUser = await _userRepository.GetAsync(userId);
@@ -61,9 +61,9 @@ namespace Application.Commands
                 await _transactionRepository.AddTransactionsAsync(transaction);
                 await _unitOfWork.SaveAsync();
 
-                return new MakeTransactionResponse(transaction.Id, transaction.Status);
+                return new InitiateTransactionResponse(transaction.Id, transaction.Status);
             }
         }
-        public record MakeTransactionResponse(Guid TransactionId, TranzactionStatus Transaction);
+        public record InitiateTransactionResponse(Guid TransactionId, TranzactionStatus Transaction);
     }
 }

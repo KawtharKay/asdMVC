@@ -22,6 +22,11 @@ namespace Infrastructure.Repositories
             return await _context.Set<Customer>().FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public async Task<Customer?> GetCustomerAsync(string email)
+        {
+            return await _context.Customers.FirstOrDefaultAsync(x => x.Email == email);
+        }
+
         public async Task<ICollection<Customer>> GetCustomersAsync()
         {
             return await _context.Set<Customer>().ToListAsync();
