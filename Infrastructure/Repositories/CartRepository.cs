@@ -17,14 +17,18 @@ namespace Infrastructure.Repositories
             await _context.Set<Cart>().AddAsync(cart);
         }
 
+        public async Task<IEnumerable<Cart>> GetAllCartsAsync()
+        {
+            return await _context.Set<Cart>().ToListAsync();
+        }
+
         public async Task<Cart?> GetCartByIdAsync(Guid id)
         {
             return await _context.Set<Cart>().FirstOrDefaultAsync(x => x.Id == id);
         }
-
         public async Task<Cart?> GetCartByUserIdAsync(Guid userId)
         {
-            return await _context.Set<Cart>().Include(x => x.Customer).Where(x => x.CustomerId == userId).SingleOrDefaultAsync(x => x.Id == userId);
+            return await _context.Set<Cart>().Include(x => x.Customer).Include(x => x.CartItems).ThenInclude(x => x.Product).SingleOrDefaultAsync(x => x.CustomerId == userId);
         }
 
         public void Update(Cart cart)

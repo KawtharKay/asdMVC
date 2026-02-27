@@ -1,5 +1,4 @@
-﻿using Application.Pagenation;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace Application.Repositories
 {
