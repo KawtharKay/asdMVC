@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Repositories
+﻿namespace Application.Repositories
 {
     public interface IUnitOfWork
     {

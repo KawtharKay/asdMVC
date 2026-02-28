@@ -1,4 +1,4 @@
-﻿using Application.Common;
+﻿using Application.Common.Dtos;
 using Application.Common.Pagenation;
 using Application.Repositories;
 using Domain.Enums;

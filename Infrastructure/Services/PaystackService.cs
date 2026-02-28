@@ -1,4 +1,4 @@
-﻿using Application.Common;
+﻿using Application.Common.Dtos;
 using Application.Services;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;

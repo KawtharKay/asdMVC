@@ -5,7 +5,6 @@
         public string? Fullname { get; set; }
         public string Email { get; set; } = default!;
         public string HashPassword { get; set; } = default!;
-        public string Salt { get; set; } = default!;
         public string? ImageUrl { get; set; }
         public bool IsVerified { get; set; } = false;
         public string? VerificationToken { get; set; }
