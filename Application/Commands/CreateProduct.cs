@@ -44,14 +44,12 @@ namespace Application.Commands
                     CreatedBy = "Admin"
                 };
 
-                await productRepository.AddToDbAsync(product);
-                await unitOfWork.SaveAsync();
 
-                // Generate QR code after save so we have the product ID
                 var qrContent = $"ID:{product.Id}|Name:{product.Name}|SKU:{product.Sku}|Price:₦{product.Price:N2}";
                 product.QrCodeImagePath = qrCodeService.GenerateQrCodeImage(
                     qrContent, product.Id.ToString());
 
+                await productRepository.AddToDbAsync(product);
                 await unitOfWork.SaveAsync();
 
                 return Result<CreateProductResponse>.Success(
