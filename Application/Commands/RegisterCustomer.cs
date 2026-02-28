@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Application.Commands
 {
-    public class Register
+    public class RegisterCustomer
     {
-        public record RegisterCommand(string FullName, string Email, string Password, string ConfirmPassword, string Phone, string Address) : IRequest<Result<RegisterResponse>>;
+        public record RegisterCustomerCommand(string FullName, string Email, string Password, string ConfirmPassword, string Phone, string Address) : IRequest<Result<RegisterCustomerResponse>>;
 
         public class RegisterHandler(
             IUserRepository userRepository,
@@ -22,17 +22,17 @@ namespace Application.Commands
             ICartRepository cartRepository,
             IEmailService emailService,
             IPasswordHasher<User> passwordHasher, 
-            IUnitOfWork unitOfWork): IRequestHandler<RegisterCommand, Result<RegisterResponse>>
+            IUnitOfWork unitOfWork): IRequestHandler<RegisterCustomerCommand, Result<RegisterCustomerResponse>>
         {
-            public async Task<Result<RegisterResponse>> Handle(RegisterCommand request, CancellationToken cancellationToken)
+            public async Task<Result<RegisterCustomerResponse>> Handle(RegisterCustomerCommand request, CancellationToken cancellationToken)
             {
-                if (request.Password != request.ConfirmPassword)return Result<RegisterResponse>.Failure("Passwords do not match");
+                if (request.Password != request.ConfirmPassword)return Result<RegisterCustomerResponse>.Failure("Passwords do not match");
 
                 var emailExists = await userRepository.GetAsync(request.Email);
-                if (emailExists is not null) return Result<RegisterResponse>.Failure("Email already registered");
+                if (emailExists is not null) return Result<RegisterCustomerResponse>.Failure("Email already registered");
 
                 var role = await roleRepository.GetAsync(AppRoles.Customer);
-                if (role is null) return Result<RegisterResponse>.Failure("Default role not found");
+                if (role is null) return Result<RegisterCustomerResponse>.Failure("Default role not found");
 
                 var token = new Random().Next(1000, 9999).ToString();
 
@@ -94,12 +94,12 @@ namespace Application.Commands
                     EmailTemplates.VerificationEmail(
                         request.FullName, token));
 
-                return Result<RegisterResponse>.Success(
+                return Result<RegisterCustomerResponse>.Success(
                     "Registration successful! Please check your email for verification code.",
-                    new RegisterResponse(user.Id, user.Email));
+                    new RegisterCustomerResponse(user.Id, user.Email));
             }
         }
 
-        public record RegisterResponse(Guid UserId, string Email);
+        public record RegisterCustomerResponse(Guid UserId, string Email);
     }
 }
