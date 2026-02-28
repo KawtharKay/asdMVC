@@ -12,7 +12,6 @@
         public int LowStockThreshold { get; set; }
         public bool IsInStock => StockQuantity > 0;
         public bool IsLowStock => StockQuantity <= LowStockThreshold;
-        public string? QrCodeBase64 { get; set; }
         public string? QrCodeImagePath { get; set; }
         public ICollection<CartItem> CartItems { get; set; } = new HashSet<CartItem>();
         public ICollection<ProductOrder> ProductOrders { get; set; } = new HashSet<ProductOrder>();

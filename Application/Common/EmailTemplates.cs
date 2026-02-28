@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Services
+﻿namespace Application.Common
 {
     public static class EmailTemplates
     {
@@ -96,6 +96,24 @@
                     <td style='padding:10px; border:1px solid #ddd;'>{DateTime.Now:dd MMM yyyy, hh:mm tt}</td>
                 </tr>
             </table>");
+
+        public static string VerificationEmail(string fullName, string token) => BaseTemplate($@"
+            <h2>Verify Your Email Address 📧</h2>
+            <p>Hi <strong>{fullName}</strong>,</p>
+            <p>Thank you for registering! Please use the code below to verify your email address.</p>
+            <div style='text-align:center; margin:30px 0;'>
+                <div style='display:inline-block; background:#4F46E5; color:#fff;
+                            font-size:36px; font-weight:bold; letter-spacing:10px;
+                            padding:20px 40px; border-radius:8px;'>
+                    {token}
+                </div>
+            </div>
+            <p style='text-align:center; color:#e53e3e;'>
+                ⚠️ This code expires in <strong>5 minutes</strong>
+            </p>
+            <p>If you did not create an account please ignore this email.</p>
+            <br/>
+            <p>Best regards,<br/><strong>EcommerceApp Team</strong></p>");
 
         public static string AdminNewTransactionEmail(string fullName, string type, decimal amount, string reference) => BaseTemplate($@"
             <h2>New Transaction Alert 💰</h2>

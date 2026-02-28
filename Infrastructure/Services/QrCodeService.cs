@@ -13,16 +13,6 @@ namespace Infrastructure.Services
             _settings = settings.Value;
         }
 
-        public string GenerateQrCodeBase64(string content)
-        {
-            using var qrGenerator = new QRCodeGenerator();
-            var qrCodeData = qrGenerator.CreateQrCode(
-                content, QRCodeGenerator.ECCLevel.Q);
-            using var qrCode = new PngByteQRCode(qrCodeData);
-            var qrCodeBytes = qrCode.GetGraphic(20);
-            return Convert.ToBase64String(qrCodeBytes);
-        }
-
         public string GenerateQrCodeImage(string content, string fileName)
         {
             using var qrGenerator = new QRCodeGenerator();

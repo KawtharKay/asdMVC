@@ -1,4 +1,4 @@
-﻿using Application.Common;
+﻿using Application.Common.Dtos;
 using Application.Constants;
 using Application.Repositories;
 using Domain.Entities;
