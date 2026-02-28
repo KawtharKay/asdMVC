@@ -21,24 +21,18 @@ namespace Application.Commands
             IWalletRepository walletRepository,
             ICartRepository cartRepository,
             IEmailService emailService,
-            IPasswordHasher<User> passwordHasher,  // ← added
-            IUnitOfWork unitOfWork)
-            : IRequestHandler<RegisterCommand, Result<RegisterResponse>>
+            IPasswordHasher<User> passwordHasher, 
+            IUnitOfWork unitOfWork): IRequestHandler<RegisterCommand, Result<RegisterResponse>>
         {
-            public async Task<Result<RegisterResponse>> Handle(
-                RegisterCommand request,
-                CancellationToken cancellationToken)
+            public async Task<Result<RegisterResponse>> Handle(RegisterCommand request, CancellationToken cancellationToken)
             {
-                if (request.Password != request.ConfirmPassword)
-                    return Result<RegisterResponse>.Failure("Passwords do not match");
+                if (request.Password != request.ConfirmPassword)return Result<RegisterResponse>.Failure("Passwords do not match");
 
                 var emailExists = await userRepository.GetAsync(request.Email);
-                if (emailExists is not null)
-                    return Result<RegisterResponse>.Failure("Email already registered");
+                if (emailExists is not null) return Result<RegisterResponse>.Failure("Email already registered");
 
                 var role = await roleRepository.GetAsync(AppRoles.Customer);
-                if (role is null)
-                    return Result<RegisterResponse>.Failure("Default role not found");
+                if (role is null) return Result<RegisterResponse>.Failure("Default role not found");
 
                 var token = new Random().Next(1000, 9999).ToString();
 
