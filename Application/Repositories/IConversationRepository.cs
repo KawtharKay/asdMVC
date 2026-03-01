@@ -1,14 +1,12 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Repositories
 {
     public interface IConversationRepository
     {
-        Task AddToDbAsync(Conversation conversation);
-        Task<Conversation?> GetConversationAsync(Guid id);
-        Task<IEnumerable<Conversation>> GetAllConversationsAsync();
+        Task AddAsync(Conversation conversation);
+        Task<Conversation?> GetByIdAsync(Guid id);
+        Task<ICollection<Conversation>> GetByUserIdAsync(Guid userId);
+        Task<ICollection<Conversation>> GetAllAsync();
     }
 }

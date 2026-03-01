@@ -13,6 +13,9 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(c => c.Title)
                 .IsRequired()
                 .HasMaxLength(200);
+
+            builder.Property(c => c.IsHandedOffToHuman)
+                .HasDefaultValue(false);
         }
     }
 }

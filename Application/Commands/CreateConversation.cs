@@ -27,7 +27,7 @@ namespace Application.Commands
                     LastMessageAt = DateTime.UtcNow
                 };
 
-                await _conversationRepository.AddToDbAsync(conversation);
+                await _conversationRepository.AddAsync(conversation);
                 await _unitOfWork.SaveAsync();
 
                 return Result<CreateConversationResponse>.Success("Success!", conversation.Adapt<CreateConversationResponse>());

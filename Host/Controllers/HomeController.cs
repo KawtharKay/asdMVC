@@ -1,25 +1,24 @@
-using Host.Models;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using static Application.Queries.GetAllCategories;
+using static Application.Queries.GetAllProducts;
 
 namespace Host.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(IMediator mediator) : Controller
     {
-        public IActionResult Index()
+        public async Task<IActionResult> Index(Guid? categoryId = null)
         {
-            return View();
-        }
+            var products = await mediator.Send(
+                new GetAllProductsQuery(categoryId));
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+            var categories = await mediator.Send(
+                new GetAllCategoriesQuery());
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            ViewBag.Categories = categories.Data;
+            ViewBag.SelectedCategory = categoryId;
+
+            return View(products.Data);
         }
     }
 }

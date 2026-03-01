@@ -53,6 +53,23 @@
             <br/>
             <p>Best regards,<br/><strong>EcommerceApp Team</strong></p>");
 
+        public static string ForgotPasswordEmail(string fullName, string token) => BaseTemplate($@"
+    <h2>Password Reset Code 🔐</h2>
+    <p>Hi <strong>{fullName}</strong>,</p>
+    <p>We received a request to reset your password. Use the code below:</p>
+    <div style='text-align:center; margin:30px 0;'>
+        <div style='display:inline-block; background:#e53e3e; color:#fff;
+                    font-size:36px; font-weight:bold; letter-spacing:10px;
+                    padding:20px 40px; border-radius:8px;'>
+            {token}
+        </div>
+    </div>
+    <p style='text-align:center; color:#e53e3e;'>
+        ⚠️ This code expires in <strong>5 minutes</strong>
+    </p>
+    <p>If you did not request a password reset please ignore this email.</p>
+    <br/>
+    <p>Best regards,<br/><strong>EcommerceApp Team</strong></p>");
         public static string WithdrawalEmail(string fullName, decimal amount, string accountNumber, string bankName, decimal newBalance) => BaseTemplate($@"
             <h2>Withdrawal Initiated 🏦</h2>
             <p>Hi <strong>{fullName}</strong>,</p>

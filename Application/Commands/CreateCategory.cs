@@ -1,6 +1,7 @@
 ﻿using Application.Common.Dtos;
 using Application.Repositories;
 using Domain.Entities;
+using FluentValidation;
 using Mapster;
 using MediatR;
 
@@ -8,31 +9,41 @@ namespace Application.Commands
 {
     public class CreateCategory
     {
-        public record CreateCategoryCommand(string Name) : IRequest<Result<CreateCategoryResponse>>;
+        public record CreateCategoryCommand(
+            string Name) : IRequest<Result<CreateCategoryResponse>>;
 
-        public class CreateCategoryHandler : IRequestHandler<CreateCategoryCommand, Result<CreateCategoryResponse>>
+        public class CreateCategoryValidator
+            : AbstractValidator<CreateCategoryCommand>
         {
-            private readonly ICategoryRepository _categoryRepository;
-            private readonly IUnitOfWork _unitOfWork;
-            public CreateCategoryHandler(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
+            public CreateCategoryValidator()
             {
-                _categoryRepository = categoryRepository;
-                _unitOfWork = unitOfWork;
+                RuleFor(x => x.Name)
+                    .NotEmpty().WithMessage("Category name is required")
+                    .MaximumLength(100).WithMessage("Category name cannot exceed 100 characters");
             }
-            public async Task<Result<CreateCategoryResponse>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+        }
+
+        public class CreateCategoryHandler(
+            ICategoryRepository categoryRepository,
+            IUnitOfWork unitOfWork)
+            : IRequestHandler<CreateCategoryCommand, Result<CreateCategoryResponse>>
+        {
+            public async Task<Result<CreateCategoryResponse>> Handle(CreateCategoryCommand request,CancellationToken cancellationToken)
             {
-                var categoryExist = await _categoryRepository.GetCategoryAsync(request.Name);
-                if (categoryExist is null) throw new Exception("Category already exists");
+                var exists = await categoryRepository.IsExistAsync(request.Name);
+                if (exists)
+                    return Result<CreateCategoryResponse>.Failure("Category already exists");
 
                 var category = new Category
                 {
-                    Name = request.Name
+                    Name = request.Name,
+                    CreatedBy = "Admin"
                 };
 
-                await _categoryRepository.AddCategoryAsync(category);
-                await _unitOfWork.SaveAsync();
+                await categoryRepository.AddAsync(category);
+                await unitOfWork.SaveAsync();
 
-                return Result<CreateCategoryResponse>.Success("Success!", category.Adapt<CreateCategoryResponse>());
+                return Result<CreateCategoryResponse>.Success("Category created successfully!",category.Adapt<CreateCategoryResponse>());
             }
         }
 

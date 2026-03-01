@@ -1,9 +1,11 @@
 ﻿using Application.Common;
 using Application.Common.Dtos;
+using Application.Common.Interfaces;
 using Application.Constants;
 using Application.Repositories;
 using Application.Services;
 using Domain.Entities;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -11,9 +13,45 @@ namespace Application.Commands
 {
     public class RegisterCustomer
     {
-        public record RegisterCustomerCommand(string FullName, string Email, string Password, string ConfirmPassword, string Phone, string Address) : IRequest<Result<RegisterCustomerResponse>>;
+        public record RegisterCustomerCommand(
+            string FullName,
+            string Email,
+            string Password,
+            string ConfirmPassword,
+            string Phone,
+            string Address)
+            : IRequest<Result<RegisterResponse>>, ISensitiveRequest;
 
-        public class RegisterHandler(
+        public class RegisterCustomerValidator : AbstractValidator<RegisterCustomerCommand>
+        {
+            public RegisterCustomerValidator()
+            {
+                RuleFor(x => x.FullName)
+                    .NotEmpty().WithMessage("Full name is required")
+                    .MaximumLength(100).WithMessage("Full name cannot exceed 100 characters");
+
+                RuleFor(x => x.Email)
+                    .NotEmpty().WithMessage("Email is required")
+                    .EmailAddress().WithMessage("Invalid email format");
+
+                RuleFor(x => x.Password)
+                    .NotEmpty().WithMessage("Password is required")
+                    .MinimumLength(6).WithMessage("Password must be at least 6 characters");
+
+                RuleFor(x => x.ConfirmPassword)
+                    .Equal(x => x.Password).WithMessage("Passwords do not match");
+
+                RuleFor(x => x.Phone)
+                    .NotEmpty().WithMessage("Phone number is required")
+                    .Matches(@"^\d{11}$").WithMessage("Phone must be 11 digits");
+
+                RuleFor(x => x.Address)
+                    .NotEmpty().WithMessage("Address is required")
+                    .MaximumLength(300).WithMessage("Address cannot exceed 300 characters");
+            }
+        }
+
+        public class RegisterCustomerHandler(
             IUserRepository userRepository,
             ICustomerRepository customerRepository,
             IRoleRepository roleRepository,
@@ -21,18 +59,21 @@ namespace Application.Commands
             IWalletRepository walletRepository,
             ICartRepository cartRepository,
             IEmailService emailService,
-            IPasswordHasher<User> passwordHasher, 
-            IUnitOfWork unitOfWork): IRequestHandler<RegisterCustomerCommand, Result<RegisterCustomerResponse>>
+            IPasswordHasher<User> passwordHasher,
+            IUnitOfWork unitOfWork)
+            : IRequestHandler<RegisterCustomerCommand, Result<RegisterResponse>>
         {
-            public async Task<Result<RegisterCustomerResponse>> Handle(RegisterCustomerCommand request, CancellationToken cancellationToken)
+            public async Task<Result<RegisterResponse>> Handle(
+                RegisterCustomerCommand request,
+                CancellationToken cancellationToken)
             {
-                if (request.Password != request.ConfirmPassword)return Result<RegisterCustomerResponse>.Failure("Passwords do not match");
-
                 var emailExists = await userRepository.GetAsync(request.Email);
-                if (emailExists is not null) return Result<RegisterCustomerResponse>.Failure("Email already registered");
+                if (emailExists is not null)
+                    return Result<RegisterResponse>.Failure("Email already registered");
 
                 var role = await roleRepository.GetAsync(AppRoles.Customer);
-                if (role is null) return Result<RegisterCustomerResponse>.Failure("Default role not found");
+                if (role is null)
+                    return Result<RegisterResponse>.Failure("Default role not found");
 
                 var token = new Random().Next(1000, 9999).ToString();
 
@@ -50,13 +91,11 @@ namespace Application.Commands
 
                 await userRepository.AddAsync(user);
 
-                var userRole = new UserRole
+                await userRoleRepository.AddAsync(new UserRole
                 {
                     UserId = user.Id,
                     RoleId = role.Id
-                };
-
-                await userRoleRepository.AddAsync(userRole);
+                });
 
                 var customer = new Customer
                 {
@@ -70,36 +109,32 @@ namespace Application.Commands
 
                 await customerRepository.AddAsync(customer);
 
-                var wallet = new Wallet
+                await walletRepository.AddWalletAsync(new Wallet
                 {
                     CustomerId = customer.Id,
                     Balance = 0,
                     CreatedBy = request.Email
-                };
+                });
 
-                await walletRepository.AddWalletAsync(wallet);
-
-                var cart = new Cart
+                await cartRepository.AddCartAsync(new Cart
                 {
                     CustomerId = customer.Id,
                     CreatedBy = request.Email
-                };
+                });
 
-                await cartRepository.AddCartAsync(cart);
                 await unitOfWork.SaveAsync();
 
                 await emailService.SendEmailAsync(
                     user.Email,
                     "Verify Your Email",
-                    EmailTemplates.VerificationEmail(
-                        request.FullName, token));
+                    EmailTemplates.VerificationEmail(request.FullName, token));
 
-                return Result<RegisterCustomerResponse>.Success(
+                return Result<RegisterResponse>.Success(
                     "Registration successful! Please check your email for verification code.",
-                    new RegisterCustomerResponse(user.Id, user.Email));
+                    new RegisterResponse(user.Id, user.Email));
             }
         }
 
-        public record RegisterCustomerResponse(Guid UserId, string Email);
+        public record RegisterResponse(Guid UserId, string Email);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Application.Common.Dtos;
 using Application.Services;
-using Microsoft.Extensions.Configuration;
+using Infrastructure.Settings;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -9,17 +10,19 @@ namespace Infrastructure.Services
     public class PaystackService : IPaystackService
     {
         private readonly HttpClient _httpClient;
-        private readonly string _secretKey;
-        private const string BaseUrl = "https://api.paystack.co";
+        private readonly PaystackSettings _settings;
 
-        public PaystackService(HttpClient httpClient, IConfiguration configuration)
+        public PaystackService(
+            HttpClient httpClient,
+            IOptions<PaystackSettings> settings)
         {
+            _settings = settings.Value;
             _httpClient = httpClient;
-            _secretKey = configuration["Paystack:SecretKey"]!;
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {_secretKey}");
+            _httpClient.DefaultRequestHeaders.Add(
+                "Authorization", $"Bearer {_settings.SecretKey}");
         }
 
-        // ─── FUND WALLET ────────────────────────────────────────────────
+        // ─── FUND WALLET ─────────────────────────────────────────────
 
         public async Task<PaystackInitializeResponse> InitializePaymentAsync(
             string email, decimal amount, string reference)
@@ -29,23 +32,26 @@ namespace Infrastructure.Services
                 email,
                 amount = (int)(amount * 100),
                 reference,
-                callback_url = "https://yourdomain.com/wallet/verify"
+                callback_url = _settings.CallbackUrl  // ← from settings now
             };
 
-            var response = await PostAsync($"{BaseUrl}/transaction/initialize", payload);
+            var response = await PostAsync(
+                $"{_settings.BaseUrl}/transaction/initialize", payload);
 
             return new PaystackInitializeResponse
             {
                 Status = response["status"]!.Value<bool>(),
                 Message = response["message"]!.Value<string>()!,
-                AuthorizationUrl = response["data"]!["authorization_url"]!.Value<string>()!,
+                AuthorizationUrl = response["data"]!["authorization_url"]!
+                    .Value<string>()!,
                 Reference = response["data"]!["reference"]!.Value<string>()!
             };
         }
 
         public async Task<PaystackVerifyResponse> VerifyPaymentAsync(string reference)
         {
-            var response = await GetAsync($"{BaseUrl}/transaction/verify/{reference}");
+            var response = await GetAsync(
+                $"{_settings.BaseUrl}/transaction/verify/{reference}");
 
             return new PaystackVerifyResponse
             {
@@ -56,13 +62,13 @@ namespace Infrastructure.Services
             };
         }
 
-        // ─── WITHDRAWAL ─────────────────────────────────────────────────
+        // ─── WITHDRAWAL ──────────────────────────────────────────────
 
         public async Task<PaystackAccountResponse> VerifyAccountNumberAsync(
             string accountNumber, string bankCode)
         {
             var response = await GetAsync(
-                $"{BaseUrl}/bank/resolve?account_number={accountNumber}&bank_code={bankCode}");
+                $"{_settings.BaseUrl}/bank/resolve?account_number={accountNumber}&bank_code={bankCode}");
 
             return new PaystackAccountResponse
             {
@@ -84,13 +90,15 @@ namespace Infrastructure.Services
                 currency = "NGN"
             };
 
-            var response = await PostAsync($"{BaseUrl}/transferrecipient", payload);
+            var response = await PostAsync(
+                $"{_settings.BaseUrl}/transferrecipient", payload);
 
             return response["data"]!["recipient_code"]!.Value<string>()!;
         }
 
         public async Task<PaystackTransferResponse> InitiateTransferAsync(
-            string recipientCode, decimal amount, string reference, string reason)
+            string recipientCode, decimal amount,
+            string reference, string reason)
         {
             var payload = new
             {
@@ -101,7 +109,8 @@ namespace Infrastructure.Services
                 reason
             };
 
-            var response = await PostAsync($"{BaseUrl}/transfer", payload);
+            var response = await PostAsync(
+                $"{_settings.BaseUrl}/transfer", payload);
 
             return new PaystackTransferResponse
             {
@@ -113,7 +122,9 @@ namespace Infrastructure.Services
 
         public async Task<List<PaystackBank>> GetBanksAsync()
         {
-            var response = await GetAsync($"{BaseUrl}/bank?currency=NGN");
+            var response = await GetAsync(
+                $"{_settings.BaseUrl}/bank?currency=NGN");
+
             var banks = response["data"]!.ToObject<List<JObject>>()!;
 
             return banks.Select(b => new PaystackBank
@@ -123,6 +134,7 @@ namespace Infrastructure.Services
             }).ToList();
         }
 
+        // ─── HELPERS ─────────────────────────────────────────────────
 
         private async Task<JObject> PostAsync(string url, object payload)
         {
