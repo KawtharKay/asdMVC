@@ -2,6 +2,7 @@
 using Application.Repositories;
 using Application.Services;
 using Domain.Entities;
+using FluentValidation;
 using Mapster;
 using MediatR;
 
@@ -18,6 +19,36 @@ namespace Application.Commands
             int StockQuantity,
             int LowStockThreshold) : IRequest<Result<CreateProductResponse>>;
 
+        public class CreateProductValidator
+            : AbstractValidator<CreateProductCommand>
+        {
+            public CreateProductValidator()
+            {
+                RuleFor(x => x.Name)
+                    .NotEmpty().WithMessage("Product name is required")
+                    .MaximumLength(200).WithMessage("Name cannot exceed 200 characters");
+
+                RuleFor(x => x.Sku)
+                    .NotEmpty().WithMessage("SKU is required")
+                    .MaximumLength(100).WithMessage("SKU cannot exceed 100 characters");
+
+                RuleFor(x => x.Price)
+                    .GreaterThan(0).WithMessage("Price must be greater than zero");
+
+                RuleFor(x => x.CategoryId)
+                    .NotEmpty().WithMessage("Category is required");
+
+                RuleFor(x => x.StockQuantity)
+                    .GreaterThanOrEqualTo(0).WithMessage("Stock cannot be negative");
+
+                RuleFor(x => x.LowStockThreshold)
+                    .GreaterThanOrEqualTo(0).WithMessage("Threshold cannot be negative");
+
+                RuleFor(x => x.ImageUrl)
+                    .NotEmpty().WithMessage("Product image is required");
+            }
+        }
+
         public class CreateProductHandler(
             IProductRepository productRepository,
             IQrCodeService qrCodeService,
@@ -30,7 +61,7 @@ namespace Application.Commands
             {
                 var productExist = await productRepository.IsExistAsync(request.Sku);
                 if (productExist)
-                    return Result<CreateProductResponse>.Failure("Product already exists");
+                    return Result<CreateProductResponse>.Failure("Product SKU already exists");
 
                 var product = new Product
                 {
@@ -44,12 +75,13 @@ namespace Application.Commands
                     CreatedBy = "Admin"
                 };
 
+                await productRepository.AddToDbAsync(product);
+                await unitOfWork.SaveAsync();
 
                 var qrContent = $"ID:{product.Id}|Name:{product.Name}|SKU:{product.Sku}|Price:₦{product.Price:N2}";
-                product.QrCodeImagePath = qrCodeService.GenerateQrCodeImage(
-                    qrContent, product.Id.ToString());
+                product.QrCodeImagePath = qrCodeService
+                    .GenerateQrCodeImage(qrContent, product.Id.ToString());
 
-                await productRepository.AddToDbAsync(product);
                 await unitOfWork.SaveAsync();
 
                 return Result<CreateProductResponse>.Success(

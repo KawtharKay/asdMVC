@@ -17,7 +17,7 @@ namespace Application.Commands
                 var role = await roleRepository.GetAsync(AppRoles.Customer);
                 if (role is null) throw new Exception("Failure");
 
-                var isRoleAssigned = await userRoleRepository.IsExist(request.UserId, role.Id);
+                var isRoleAssigned = await userRoleRepository.IsExistAsync(request.UserId, role.Id);
                 if (isRoleAssigned) throw new Exception("Role already assigned");
 
                 var userRole = new UserRole
