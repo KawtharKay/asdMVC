@@ -20,7 +20,8 @@
         </head>
         <body>
             <div class='container'>
-                <div class='header'><h1>EcommerceApp</h1></div>
+                <div class='header'><h1>asdMVCApp</h1></div>
+
                 <div class='body'>{content}</div>
                 <div class='footer'>© {DateTime.Now.Year} EcommerceApp. All rights reserved.</div>
             </div>
