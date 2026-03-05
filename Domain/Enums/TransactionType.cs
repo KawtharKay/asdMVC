@@ -1,5 +1,10 @@
 ﻿namespace Domain.Enums
 {
-    public enum TransactionType { Credit, Debit }
-    public enum TransactionStatus { Pending, Success, Failed }
+    public enum TransactionType
+    {
+        Credit = 1,      
+        Debit,      
+        Withdrawal 
+    }
+
 }

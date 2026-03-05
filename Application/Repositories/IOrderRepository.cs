@@ -1,15 +1,12 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Repositories
 {
     public interface IOrderRepository
     {
-        Task<bool> IsExistAsync(string orderNo);
-        Task AddToDbAsync(Order order);
-        Task<Order?> GetOrderAsync(Guid id);
-        Task<ICollection<Order>> GetOrdersAsync();
+        Task AddAsync(Order order);
+        Task<Order?> GetByIdAsync(Guid id);
+        Task<ICollection<Order>> GetByCustomerIdAsync(Guid customerId);
+        Task<ICollection<Order>> GetAllAsync();
     }
 }

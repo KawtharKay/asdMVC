@@ -32,7 +32,8 @@ namespace Host.Controllers
             }
 
             TempData["Success"] = result.Message;
-            return RedirectToAction(nameof(VerifyEmail), new {email = result.Data!.Email});
+            return RedirectToAction(
+                nameof(VerifyEmail), new { email = result.Data!.Email });
         }
 
         [HttpGet]
