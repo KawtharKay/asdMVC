@@ -14,4 +14,15 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Admin\" />
+    <Folder Include="Views\Auth\" />
+    <Folder Include="Views\BankAccount\" />
+    <Folder Include="Views\Cart\" />
+    <Folder Include="Views\Chat\" />
+    <Folder Include="Views\Wallet\" />
+    <Folder Include="Views\Order\" />
+    <Folder Include="Views\Notification\" />
+  </ItemGroup>
+
 </Project>
