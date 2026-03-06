@@ -23,18 +23,18 @@
                 <div class='header'><h1>asdMVCApp</h1></div>
 
                 <div class='body'>{content}</div>
-                <div class='footer'>© {DateTime.Now.Year} EcommerceApp. All rights reserved.</div>
+                <div class='footer'>© {DateTime.Now.Year} asdMVCApp. All rights reserved.</div>
             </div>
         </body>
         </html>";
 
         public static string WelcomeEmail(string fullName) => BaseTemplate($@"
             <h2>Welcome, {fullName}! 🎉</h2>
-            <p>Thank you for registering on EcommerceApp. Your account has been created successfully.</p>
+            <p>Thank you for registering on asdMVCApp. Your account has been created successfully.</p>
             <p>You can now browse products, fund your wallet and place orders.</p>
             <p>If you have any questions, feel free to reach out to our support team.</p>
             <br/>
-            <p>Best regards,<br/><strong>EcommerceApp Team</strong></p>");
+            <p>Best regards,<br/><strong>asdMVCApp Team</strong></p>");
 
         public static string WalletFundedEmail(string fullName, decimal amount, decimal newBalance) => BaseTemplate($@"
             <h2>Wallet Funded Successfully ✅</h2>
@@ -52,7 +52,7 @@
             </table>
             <p>If you did not initiate this transaction, please contact support immediately.</p>
             <br/>
-            <p>Best regards,<br/><strong>EcommerceApp Team</strong></p>");
+            <p>Best regards,<br/><strong>asdMVCApp Team</strong></p>");
 
         public static string ForgotPasswordEmail(string fullName, string token) => BaseTemplate($@"
     <h2>Password Reset Code 🔐</h2>
@@ -70,7 +70,7 @@
     </p>
     <p>If you did not request a password reset please ignore this email.</p>
     <br/>
-    <p>Best regards,<br/><strong>EcommerceApp Team</strong></p>");
+    <p>Best regards,<br/><strong>asdMVCApp Team</strong></p>");
         public static string WithdrawalEmail(string fullName, decimal amount, string accountNumber, string bankName, decimal newBalance) => BaseTemplate($@"
             <h2>Withdrawal Initiated 🏦</h2>
             <p>Hi <strong>{fullName}</strong>,</p>
@@ -95,11 +95,11 @@
             </table>
             <p>If you did not initiate this transaction, please contact support immediately.</p>
             <br/>
-            <p>Best regards,<br/><strong>EcommerceApp Team</strong></p>");
+            <p>Best regards,<br/><strong>asdMVCApp Team</strong></p>");
 
         public static string AdminNewUserEmail(string fullName, string email) => BaseTemplate($@"
             <h2>New User Registration 👤</h2>
-            <p>A new user has just registered on EcommerceApp.</p>
+            <p>A new user has just registered on asdMVCApp.</p>
             <table style='width:100%; border-collapse:collapse; margin:20px 0;'>
                 <tr style='background:#f4f4f4;'>
                     <td style='padding:10px; border:1px solid #ddd;'>Full Name</td>
@@ -131,7 +131,7 @@
             </p>
             <p>If you did not create an account please ignore this email.</p>
             <br/>
-            <p>Best regards,<br/><strong>EcommerceApp Team</strong></p>");
+            <p>Best regards,<br/><strong>asdMVCApp Team</strong></p>");
 
         public static string AdminNewTransactionEmail(string fullName, string type, decimal amount, string reference) => BaseTemplate($@"
             <h2>New Transaction Alert 💰</h2>

@@ -3,7 +3,7 @@ using Application.Repositories;
 using FluentValidation;
 using MediatR;
 
-namespace Application.Commands
+namespace Application.Queries
 {
     public class GetCart
     {

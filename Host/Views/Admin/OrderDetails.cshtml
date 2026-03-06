@@ -1,0 +1,101 @@
+﻿@using static Application.Queries.GetOrderById
+@model GetOrderByIdResponse
+@{
+    ViewData["Title"] = $"Order {Model.OrderNo}";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0">@Model.OrderNo</h5>
+    <span class="badge @GetStatusBadge(Model.Status)">@Model.Status</span>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <table class="table table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-3">Product</th>
+                            <th>Qty</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td class="ps-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="@item.ImageUrl"
+                                             style="width: 36px; height: 36px; object-fit: cover;"
+                                             class="rounded" />
+                                        <span class="small">@item.ProductName</span>
+                                    </div>
+                                </td>
+                                <td class="small">@item.Quantity</td>
+                                <td class="small">₦@item.UnitPrice.ToString("N2")</td>
+                                <td class="small fw-semibold">
+                                    ₦@((item.Quantity * item.UnitPrice).ToString("N2"))
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-body">
+                <h6 class="mb-3">Update Status</h6>
+                <form asp-action="UpdateOrderStatus" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="orderId" value="@Model.OrderId" />
+
+                    <select name="status" class="form-select form-select-sm mb-2">
+                        @foreach (var s in Enum.GetValues<Domain.Enums.OrderStatus>())
+                        {
+                            if (Model.Status == s.ToString())
+                            {
+                                <option value="@s" selected>@s</option>
+                            }
+                            else
+                            {
+                                <option value="@s">@s</option>
+                            }
+                        }
+                    </select>
+
+                    <button type="submit" class="btn btn-dark btn-sm w-100">
+                        Update
+                    </button>
+                </form>
+                <hr />
+                <p class="small text-muted mb-1">Delivery Address</p>
+                <p class="small mb-2">@Model.DeliveryAddress</p>
+                <hr />
+                <div class="d-flex justify-content-between fw-semibold">
+                    <span>Total</span>
+                    <span>₦@Model.TotalAmount.ToString("N2")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a asp-action="Orders" class="btn btn-outline-secondary btn-sm mt-2">← Back</a>
+
+@functions {
+    string GetStatusBadge(string status) => status switch
+    {
+        "Pending" => "bg-warning text-dark",
+        "Processing" => "bg-info text-dark",
+        "Shipped" => "bg-primary",
+        "Delivered" => "bg-success",
+        "Cancelled" => "bg-danger",
+        _ => "bg-secondary"
+    };
+}

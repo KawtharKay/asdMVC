@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Web.Helpers;
 using static Application.Commands.AddToCart;
 using static Application.Commands.RemoveFromCart;
-using static Application.Commands.GetCart;
+using static Application.Queries.GetCart;
 using static Application.Commands.UpdateCartItem;
 
 namespace Host.Controllers

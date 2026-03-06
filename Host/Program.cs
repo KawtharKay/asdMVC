@@ -1,4 +1,6 @@
+using Domain.Entities;
 using Infrastructure.Hubs;
+using Microsoft.AspNetCore.Identity;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
@@ -45,5 +47,9 @@ app.MapHub<ChatHub>("/chatHub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+//var hasher = new PasswordHasher<User>();
+//var hash = hasher.HashPassword(new User(), "Pa$$word");
+//Console.WriteLine(hash);
 
 app.Run();

@@ -1,0 +1,73 @@
+﻿@using static Application.Queries.GetMyOrders
+@model IEnumerable<GetMyOrdersResponse>
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<h5 class="mb-4">My Orders</h5>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="text-center py-5">
+        <p class="text-muted">No orders yet.</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-dark btn-sm">
+            Start Shopping
+        </a>
+    </div>
+}
+else
+{
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">Order No</th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td class="ps-3 fw-semibold">@order.OrderNo</td>
+                            <td class="small text-muted">
+                                @order.DateCreated.ToString("dd MMM yyyy")
+                            </td>
+                            <td class="small">@order.Items.Count item(s)</td>
+                            <td class="fw-semibold">₦@order.TotalAmount.ToString("N2")</td>
+                            <td>
+                                <span class="badge @GetStatusBadge(order.Status)">
+                                    @order.Status
+                                </span>
+                            </td>
+                            <td>
+                                <a asp-action="Details"
+                                   asp-route-id="@order.OrderId"
+                                   class="btn btn-sm btn-outline-dark">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@functions {
+    string GetStatusBadge(string status) => status switch
+    {
+        "Pending" => "bg-warning text-dark",
+        "Processing" => "bg-info text-dark",
+        "Shipped" => "bg-primary",
+        "Delivered" => "bg-success",
+        "Cancelled" => "bg-danger",
+        _ => "bg-secondary"
+    };
+}

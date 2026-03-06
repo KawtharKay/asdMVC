@@ -63,7 +63,7 @@ namespace Application.Commands
 
                 await emailService.SendEmailAsync(
                     user.Email,
-                    "Welcome to EcommerceApp 🎉",
+                    "Welcome to asdMVCApp 🎉",
                     EmailTemplates.WelcomeEmail(user.Fullname ?? "Customer"));
 
                 return Result<string>.Success(

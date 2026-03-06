@@ -19,6 +19,12 @@ namespace Infrastructure.Persistence.Configurations
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasData(new UserRole
+            {
+                UserId = Guid.Parse("E0560D58-6052-45F7-8406-08D4B835BBEF"),
+                RoleId = Guid.Parse("427ACFF7-41DA-42D9-BCFA-E539BAF2E53E"),
+            });
         }
     }
 }

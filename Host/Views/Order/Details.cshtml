@@ -1,0 +1,97 @@
+﻿@using static Application.Queries.GetOrderById
+@model GetOrderByIdResponse
+@{
+    ViewData["Title"] = $"Order {Model.OrderNo}";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0">@Model.OrderNo</h5>
+    <span class="badge @GetStatusBadge(Model.Status)">@Model.Status</span>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <table class="table table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-3">Product</th>
+                            <th>Qty</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td class="ps-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="@item.ImageUrl"
+                                             style="width: 40px; height: 40px; object-fit: cover;"
+                                             class="rounded" />
+                                        <span class="small">@item.ProductName</span>
+                                    </div>
+                                </td>
+                                <td>@item.Quantity</td>
+                                <td>₦@item.UnitPrice.ToString("N2")</td>
+                                <td>₦@((item.Quantity * item.UnitPrice).ToString("N2"))</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-body">
+                <h6 class="mb-3">Order Info</h6>
+                <p class="mb-2 small">
+                    <span class="text-muted">Date:</span><br />
+                    @Model.DateCreated.ToString("dd MMM yyyy, hh:mm tt")
+                </p>
+                <p class="mb-2 small">
+                    <span class="text-muted">Delivery Address:</span><br />
+                    @Model.DeliveryAddress
+                </p>
+                <hr />
+                <div class="d-flex justify-content-between fw-semibold">
+                    <span>Total</span>
+                    <span>₦@Model.TotalAmount.ToString("N2")</span>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Status == "Pending" || Model.Status == "Processing")
+        {
+            <form asp-action="Cancel" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="orderId" value="@Model.OrderId" />
+                <button type="submit"
+                        class="btn btn-outline-danger w-100 btn-sm"
+                        onclick="return confirm('Are you sure you want to cancel this order?')">
+                    Cancel Order
+                </button>
+            </form>
+        }
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Back to Orders</a>
+</div>
+
+@functions {
+    string GetStatusBadge(string status) => status switch
+    {
+        "Pending" => "bg-warning text-dark",
+        "Processing" => "bg-info text-dark",
+        "Shipped" => "bg-primary",
+        "Delivered" => "bg-success",
+        "Cancelled" => "bg-danger",
+        _ => "bg-secondary"
+    };
+}

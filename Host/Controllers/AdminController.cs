@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.Constants;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Application.Commands.CreateCategory;
@@ -17,10 +18,9 @@ using static Application.Queries.GetProductById;
 
 namespace Host.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = AppRoles.Admin)]
     public class AdminController(IMediator mediator) : Controller
     {
-        // DASHBOARD
 
         public async Task<IActionResult> Index()
         {
@@ -28,7 +28,6 @@ namespace Host.Controllers
             return View(result.Data);
         }
 
-        // CUSTOMERS
 
         public async Task<IActionResult> Customers()
         {
@@ -49,7 +48,6 @@ namespace Host.Controllers
             return View(result.Data);
         }
 
-        // ORDERS
 
         public async Task<IActionResult> Orders()
         {
@@ -82,7 +80,6 @@ namespace Host.Controllers
             return RedirectToAction(nameof(OrderDetails), new { id = orderId });
         }
 
-        // PRODUCTS
 
         public async Task<IActionResult> Products()
         {
@@ -166,7 +163,6 @@ namespace Host.Controllers
             return RedirectToAction(nameof(Products));
         }
 
-        // CATEGORIES
 
         public async Task<IActionResult> Categories()
         {
