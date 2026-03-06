@@ -31,20 +31,15 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(p => p.QrCodeImagePath)
                 .HasMaxLength(500);
 
-            builder.Property(p => p.QrCodeBase64)
-                .HasColumnType("LONGTEXT");
-
             builder.Property(p => p.StockQuantity)
                 .HasDefaultValue(0);
 
             builder.Property(p => p.LowStockThreshold)
                 .HasDefaultValue(5);
 
-            // Computed properties — not stored in DB
             builder.Ignore(p => p.IsInStock);
             builder.Ignore(p => p.IsLowStock);
 
-            // One Product → One Category (dependent side)
             builder.HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Application.Constants;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -121,10 +122,14 @@ namespace Host.Controllers
                         : DateTimeOffset.UtcNow.AddHours(1)
                 });
 
-            if (User.IsInRole("Admin"))
-                return RedirectToAction("Index", "Admin");
+            return result.Data.Role == AppRoles.Admin
+                ? RedirectToAction("Index", "Admin")
+                : RedirectToAction("Index", "Home");
 
-            return RedirectToAction("Index", "Home");
+            //if (User.IsInRole(AppRoles.Admin))
+            //    return RedirectToAction("Index", "Admin");
+
+            //return RedirectToAction("Index", "Home");
         }
 
         

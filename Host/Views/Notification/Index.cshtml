@@ -1,0 +1,91 @@
+﻿@using static Application.Queries.GetMyNotifications
+@model IEnumerable<GetMyNotificationsResponse>
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0">Notifications</h5>
+    @if (Model != null && Model.Any(n => !n.IsRead))
+    {
+        <button class="btn btn-outline-secondary btn-sm"
+                onclick="markAllAsRead()">
+            Mark all as read
+        </button>
+    }
+</div>
+
+@Html.AntiForgeryToken()
+
+@if (Model == null || !Model.Any())
+{
+    <p class="text-muted small">No notifications.</p>
+}
+else
+{
+    <div class="list-group shadow-sm">
+        @foreach (var n in Model)
+        {
+            <div class="list-group-item list-group-item-action border-0 @(!n.IsRead ? "bg-light" : "")"
+                 id="notif-@n.Id">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <p class="mb-1 fw-semibold small">@n.Title</p>
+                        <p class="mb-1 text-muted small">@n.Message</p>
+                        <small class="text-muted">
+                            @n.DateCreated.ToString("dd MMM yyyy, hh:mm tt")
+                        </small>
+                    </div>
+                    @if (!n.IsRead)
+                    {
+                        <button class="btn btn-link btn-sm p-0 text-muted"
+                                onclick="markAsRead('@n.Id')">
+                            Mark read
+                        </button>
+                    }
+                    else
+                    {
+                        <small class="text-muted">Read</small>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+    <script>
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        function markAsRead(id) {
+            fetch('/Notification/MarkAsRead', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': token
+                },
+                body: `notificationId=${id}`
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    const el = document.getElementById(`notif-${id}`);
+                    el.classList.remove('bg-light');
+                    const btn = el.querySelector('button');
+                    if (btn) btn.outerHTML = '<small class="text-muted">Read</small>';
+                }
+            });
+        }
+
+        function markAllAsRead() {
+            fetch('/Notification/MarkAllAsRead', {
+                method: 'POST',
+                headers: { 'RequestVerificationToken': token }
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) location.reload();
+            });
+        }
+    </script>
+}

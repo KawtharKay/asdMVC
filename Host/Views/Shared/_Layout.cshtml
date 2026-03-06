@@ -3,16 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ShopApp</title>
+    <title>@ViewData["Title"] - asdMVCApp</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="bg-light">
+<body class="bg-light d-flex flex-column min-vh-100">
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-4">
-            <div class="container">
+            <div class="container-fluid px-4">
                 <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
-                    ShopApp
+                    asdMVCApp
                 </a>
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="collapse"
@@ -106,7 +106,7 @@
         </nav>
     </header>
 
-    <div class="container">
+    <div class="container-fluid px-4 flex-grow-1">
         @if (TempData["Success"] != null)
         {
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -128,8 +128,8 @@
     </div>
 
     <footer class="border-top bg-white mt-4">
-        <div class="container py-3">
-            <small class="text-muted">&copy; 2026 ShopApp</small>
+        <div class="container-fluid px-4 py-3">
+            <small class="text-muted">&copy; 2026 asdMVCApp</small>
         </div>
     </footer>
 

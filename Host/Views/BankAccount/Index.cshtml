@@ -1,0 +1,109 @@
+﻿@using static Application.Queries.GetMyBankAccounts
+@model IEnumerable<GetMyBankAccountsResponse>
+@{
+    ViewData["Title"] = "Bank Accounts";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="mb-0">Bank Accounts</h5>
+    <button class="btn btn-dark btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#addModal">
+        + Add Account
+    </button>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+    <p class="text-muted small">No saved bank accounts.</p>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var account in Model)
+        {
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 @(account.IsDefault ? "border-start border-dark border-3" : "")">
+                    <div class="card-body">
+                        @if (account.IsDefault)
+                        {
+                            <span class="badge bg-dark mb-2">Default</span>
+                        }
+                        <p class="fw-semibold mb-1">@account.BankName</p>
+                        <p class="mb-0">@account.AccountNumber</p>
+                        <p class="text-muted small mb-3">@account.AccountName</p>
+
+                        <div class="d-flex gap-2">
+                            @if (!account.IsDefault)
+                            {
+                                <form asp-action="SetDefault" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="bankAccountId" value="@account.Id" />
+                                    <button type="submit" class="btn btn-outline-dark btn-sm">
+                                        Set Default
+                                    </button>
+                                </form>
+                            }
+                            <form asp-action="Delete" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="bankAccountId" value="@account.Id" />
+                                <button type="submit"
+                                        class="btn btn-outline-danger btn-sm"
+                                        onclick="return confirm('Delete this account?')">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@* Add Account Modal *@
+<div class="modal fade" id="addModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h6 class="modal-title fw-bold">Add Bank Account</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="Add" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="row g-2 mb-3">
+                        <div class="col">
+                            <label class="form-label small fw-semibold">Bank Name</label>
+                            <input type="text" name="BankName" class="form-control" required />
+                        </div>
+                        <div class="col">
+                            <label class="form-label small fw-semibold">Bank Code</label>
+                            <input type="text" name="BankCode" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Account Number</label>
+                        <input type="text" name="AccountNumber"
+                               class="form-control" maxlength="10" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Account Name</label>
+                        <input type="text" name="AccountName" class="form-control" required />
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" name="IsDefault" class="form-check-input" />
+                        <label class="form-check-label small">Set as default</label>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-dark btn-sm">Add Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

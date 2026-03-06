@@ -1,0 +1,99 @@
+﻿@using static Application.Queries.GetDashboardStats
+@model GetDashboardStatsResponse
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h5 class="mb-4">Dashboard</h5>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-2 col-6">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body py-3">
+                <h4 class="fw-bold mb-0">@Model.TotalCustomers</h4>
+                <small class="text-muted">Customers</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body py-3">
+                <h4 class="fw-bold mb-0">@Model.TotalOrders</h4>
+                <small class="text-muted">Orders</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body py-3">
+                <h4 class="fw-bold text-warning mb-0">@Model.PendingOrders</h4>
+                <small class="text-muted">Pending</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body py-3">
+                <h4 class="fw-bold mb-0">@Model.TotalProducts</h4>
+                <small class="text-muted">Products</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body py-3">
+                <h4 class="fw-bold text-danger mb-0">@Model.LowStockProducts</h4>
+                <small class="text-muted">Low Stock</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-6">
+        <div class="card border-0 shadow-sm text-center">
+            <div class="card-body py-3">
+                <h5 class="fw-bold text-success mb-0">
+                    ₦@Model.TotalRevenue.ToString("N0")
+                </h5>
+                <small class="text-muted">Revenue</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-3 col-6">
+        <a asp-action="Orders"
+           class="card border-0 shadow-sm text-decoration-none text-dark">
+            <div class="card-body text-center py-4">
+                <p class="mb-1" style="font-size: 1.5rem;">📦</p>
+                <p class="mb-0 fw-semibold small">Orders</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 col-6">
+        <a asp-action="Products"
+           class="card border-0 shadow-sm text-decoration-none text-dark">
+            <div class="card-body text-center py-4">
+                <p class="mb-1" style="font-size: 1.5rem;">🏷️</p>
+                <p class="mb-0 fw-semibold small">Products</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 col-6">
+        <a asp-action="Customers"
+           class="card border-0 shadow-sm text-decoration-none text-dark">
+            <div class="card-body text-center py-4">
+                <p class="mb-1" style="font-size: 1.5rem;">👥</p>
+                <p class="mb-0 fw-semibold small">Customers</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 col-6">
+        <a asp-action="Categories"
+           class="card border-0 shadow-sm text-decoration-none text-dark">
+            <div class="card-body text-center py-4">
+                <p class="mb-1" style="font-size: 1.5rem;">📂</p>
+                <p class="mb-0 fw-semibold small">Categories</p>
+            </div>
+        </a>
+    </div>
+</div>

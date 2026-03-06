@@ -1,0 +1,172 @@
+﻿@using static Application.Queries.GetTransactionHistory
+@model IEnumerable<GetTransactionHistoryResponse>
+@{
+    ViewData["Title"] = "Wallet";
+    var balance = (decimal)(ViewBag.Balance ?? 0m);
+}
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm bg-dark text-white">
+            <div class="card-body p-4">
+                <p class="small text-white-50 mb-1">Available Balance</p>
+                <h3 class="fw-bold mb-3">₦@balance.ToString("N2")</h3>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-light btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#fundModal">
+                        + Fund
+                    </button>
+                    <button class="btn btn-outline-light btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#withdrawModal">
+                        Withdraw
+                    </button>
+                    <a asp-controller="BankAccount"
+                       asp-action="Index"
+                       class="btn btn-outline-light btn-sm">
+                        Bank Accounts
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h6 class="mb-3">Transaction History</h6>
+
+@if (Model == null || !Model.Any())
+{
+    <p class="text-muted small">No transactions yet.</p>
+}
+else
+{
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">Date</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Balance After</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in Model)
+                    {
+                        <tr>
+                            <td class="ps-3 small text-muted">
+                                @t.DateCreated.ToString("dd MMM yyyy")
+                            </td>
+                            <td class="small">@t.Description</td>
+                            <td>
+                                <span class="badge @(t.Type == "Credit" ? "bg-success" : "bg-danger")">
+                                    @t.Type
+                                </span>
+                            </td>
+                            <td class="fw-semibold @(t.Type == "Credit" ? "text-success" : "text-danger")">
+                                @(t.Type == "Credit" ? "+" : "-")₦@t.Amount.ToString("N2")
+                            </td>
+                            <td class="small">₦@t.BalanceAfter.ToString("N2")</td>
+                            <td>
+                                <span class="badge @(t.Status == "Success" ? "bg-success" : t.Status == "Pending" ? "bg-warning text-dark" : "bg-danger")">
+                                    @t.Status
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@* Fund Modal *@
+<div class="modal fade" id="fundModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h6 class="modal-title fw-bold">Fund Wallet</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="Fund" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Amount (₦)</label>
+                        <input type="number"
+                               name="amount"
+                               class="form-control"
+                               min="100"
+                               placeholder="Enter amount"
+                               required />
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-dark btn-sm">
+                        Proceed to Payment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* Withdraw Modal *@
+<div class="modal fade" id="withdrawModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h6 class="modal-title fw-bold">Withdraw</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="Withdraw" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Amount (₦)</label>
+                        <input type="number" name="Amount"
+                               class="form-control" min="100" required />
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col">
+                            <label class="form-label small fw-semibold">Bank Name</label>
+                            <input type="text" name="BankName" class="form-control" required />
+                        </div>
+                        <div class="col">
+                            <label class="form-label small fw-semibold">Bank Code</label>
+                            <input type="text" name="BankCode" class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Account Number</label>
+                        <input type="text" name="AccountNumber"
+                               class="form-control" maxlength="10" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Account Name</label>
+                        <input type="text" name="AccountName" class="form-control" required />
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" name="SaveAccount" class="form-check-input" />
+                        <label class="form-check-label small">Save this account</label>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-dark btn-sm">Withdraw</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
